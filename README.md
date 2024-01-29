@@ -1,2 +1,2 @@
 # NodejsHttpServer
-Ezsy Node.js http server
+Easy Node.js http server
