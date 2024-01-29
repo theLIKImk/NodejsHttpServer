@@ -24,10 +24,10 @@ http.createServer( function (request, response) {
 	//设定html目录
 	var pathname= htmldir + pathname;
    
-   	//获取文件类型
+   	//获取文件类型方便更改头部
+	// var fileName = pathname_f.substr(pathname_f.lastIndexOf("/") + 1, pathname_f.length);
 	var pathname_f = '.' + pathname;
 	var headType = pathname_f.substr(pathname_f.lastIndexOf(".") + 1, pathname_f.length);
-	var fileName = pathname_f.substr(pathname_f.lastIndexOf("/") + 1, pathname_f.length);
    
 	// 从文件系统中读取请求的文件内容
 	fs.readFile(pathname.substr(1), function (err, data) {
