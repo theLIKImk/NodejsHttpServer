@@ -11,7 +11,8 @@ http.createServer( function (request, response) {
 	// var pathname = url.parse(request.url).pathname;
 	var pathname = url.parse(request.url,true).pathname;
    
-	//无附加默认重定向index
+	//无附加默认重定向index.html
+	//可在此处加入表单判定选项
 	if (pathname == "/" ) {
 		var pathname="/index.html";
 		console.log("index.html");
@@ -38,7 +39,7 @@ http.createServer( function (request, response) {
 			response.write('<!DOCTYPE html><html><head><meta charset="utf-8"><style>.center {padding: 70px 0;text-align: center;}</style></head><body><p class="center">Notfound</p></body></html>'); 
 		}else{             
 			// HTTP 状态码: 200 : OK
-			// 自动获取头部
+			// 自动获取头部,可载入css和js文件等（矢量图形无法显示）
 			// Content Type: text/${headType}
 			console.log("HeadType:" + headType + "\n");
 			response.writeHead(200, {'Content-Type': 'text/' + headType});   
