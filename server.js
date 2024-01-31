@@ -2,32 +2,36 @@ var http = require('http');
 var fs = require('fs');
 var url = require('url');
 
-var htmldir = "/html";
+var htmldir = "/www";
 var port = 80;
- 
+
+var netreq=0
+
 // 创建服务器
 http.createServer( function (request, response) {  
+	
+	netreq = netreq + 1;
+	
 	// 解析请求，包括文件名
 	// var pathname = url.parse(request.url).pathname;
 	var pathname = url.parse(request.url,true).pathname;
    
-	//无附加默认重定向index.html
-	//可在此处加入表单判定选项
+	//无附加默认重定向index
 	if (pathname == "/" ) {
 		var pathname="/index.html";
-		console.log("index.html");
+		console.log("["+netreq+"]index.html");
 	} else {
 		//输出信息
-		console.log(htmldir + pathname);
+		console.log("["+netreq+"]"+htmldir + pathname);
 	}
    
 	//设定html目录
 	var pathname= htmldir + pathname;
    
-   	//获取文件类型方便更改头部
-	// var fileName = pathname_f.substr(pathname_f.lastIndexOf("/") + 1, pathname_f.length);
+   	//获取文件类型
 	var pathname_f = '.' + pathname;
 	var headType = pathname_f.substr(pathname_f.lastIndexOf(".") + 1, pathname_f.length);
+	var fileName = pathname_f.substr(pathname_f.lastIndexOf("/") + 1, pathname_f.length);
    
 	// 从文件系统中读取请求的文件内容
 	fs.readFile(pathname.substr(1), function (err, data) {
@@ -36,14 +40,27 @@ http.createServer( function (request, response) {
 			// HTTP 状态码: 404 : NOT FOUND
 			// Content Type: text/html 
 			response.writeHead(404, {'Content-Type': 'text/html'});
-			response.write('<!DOCTYPE html><html><head><meta charset="utf-8"><style>.center {padding: 70px 0;text-align: center;}</style></head><body><p class="center">Notfound</p></body></html>'); 
+			response.write('<!DOCTYPE html><html><head><meta charset="utf-8"><style>.center {padding: 70px 0;text-align: center;}</style></head><body><p class="center">Notfound</p><p>' + err + '</p></body></html>'); 
 		}else{             
 			// HTTP 状态码: 200 : OK
-			// 自动获取头部,可载入css和js文件等（矢量图形无法显示）
 			// Content Type: text/${headType}
 			console.log("HeadType:" + headType + "\n");
-			response.writeHead(200, {'Content-Type': 'text/' + headType});   
-			          
+			
+			//根据文件类型更改头部
+			if (headType=="gif" || headType=="png" || headType=="jpg") {
+				//图片
+				response.writeHead(200, {'Content-Type': 'image/' + headType});
+			} else if (headType=="svg") {
+				//矢量图像
+				response.writeHead(200, {'Content-Type': 'image/svg+xml'});
+			} else if (headType=="js") {
+				//脚本
+				response.writeHead(200, {'Content-Type': 'application/javascript'});
+			} else {
+				//Html以及其他
+				//PS:虽然按道理是要的说..但浏览器能识别欸....摆~
+				response.writeHead(200, {'Content-Type': 'text/' + headType});   
+			}
 			// 响应html文件内容
 			response.write(data);
 
