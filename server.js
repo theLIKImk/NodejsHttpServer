@@ -90,7 +90,3 @@ http.createServer( function (request, response) {
 // 控制台会输出以下信息
 console.log('Server running at http://127.0.0.1:' + port + '/');
 console.log('-----------\n');
- 
-// 控制台会输出以下信息
-console.log('Server running at http://127.0.0.1:' + port + '/');
-console.log('-----------\n');
